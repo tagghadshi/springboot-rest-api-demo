@@ -12,10 +12,9 @@ public class UserController { // spring
 	@Autowired  //DI
 	IUserService userService;
 	
-	@GetMapping("/getuser")
-	private String getUser() {
-		System.out.println("called");
-		return "Hello";
+	@GetMapping("/user")
+	private Iterable<User> getUser() {
+		return userService.getAllUser();
 	}
 
 	@PostMapping("/user")
