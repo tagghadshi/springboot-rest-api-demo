@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SpringbootDemoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringbootDemoApplication.class, args);  //create Spring container 
+		SpringApplication.run(SpringbootDemoApplication.class, args); // create Spring container
 	}
 
 }
