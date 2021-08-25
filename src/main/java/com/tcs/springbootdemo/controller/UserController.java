@@ -1,7 +1,9 @@
-package com.tcs.springbootdemo;
+package com.tcs.springbootdemo.controller;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -15,37 +17,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tcs.springbootdemo.User;
+import com.tcs.springbootdemo.exceptions.UserNotFoundException;
+import com.tcs.springbootdemo.service.IUserService;
+
 @RestController
 @RequestMapping("/user")
-public class UserController { // spring
+public class UserController {
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired // DI
 	IUserService userService;
 
 	@GetMapping
-	private Iterable<User> getAllUser() {
+	public Iterable<User> getAllUser() {
 		return userService.getAllUser();
 	}
 
 	@GetMapping("/{id}")
-	private Optional<User> getUser(@PathVariable("id") Integer id) {
+	public Optional<User> getUser(@PathVariable("id") Integer id) {
 		return userService.getUser(id);
 	}
 
-	@ExceptionHandler(value = { UserNotFoundException.class, IllegalStateException.class, EmptyResultDataAccessException.class })
+	@ExceptionHandler(value = { UserNotFoundException.class, IllegalStateException.class,
+			EmptyResultDataAccessException.class })
 	public ResponseEntity<User> exception(RuntimeException runtimeException) {
 		return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public void deleteUser(@PathVariable("id") Integer id) {
 		userService.deleteUser(id);
 	}
 
 	@PostMapping
-	private void saveUser(@RequestBody User user) {
+	public void saveUser(@RequestBody User user) {
 		userService.save(user);
-		System.out.println(user.getFirstName());
+		logger.debug(user.getFirstName());
 
 	}
 }
