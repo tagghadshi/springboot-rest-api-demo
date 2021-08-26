@@ -18,10 +18,10 @@ public class UserService implements IUserService {
 	IUserRepository userRepository;
 
 	@Override
-	@Transactional
-	public void save(User user) {
+	@Transactional(rollbackFor = Exception.class) //RollBack for all type of Exception
+	public void save(User user) throws Exception  {
 		userRepository.save(user);
-		throw new RuntimeException();
+		throw new Exception();
 	}
 
 	@Override
