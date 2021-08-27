@@ -3,9 +3,11 @@ package com.tcs.springbootdemo.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.tcs.springbootdemo.entity.User;
 import com.tcs.springbootdemo.exceptions.UserNotFoundException;
@@ -18,10 +20,11 @@ public class UserService implements IUserService {
 	IUserRepository userRepository;
 
 	@Override
-	@Transactional(rollbackFor = Exception.class,noRollbackFor = IllegalStateException.class) //RollBack for all type of Exception
-	public void save(User user) throws Exception  {
+	@Transactional(rollbackFor = Exception.class, noRollbackFor = IllegalStateException.class) // RollBack for all type
+	@ResponseStatus(code = HttpStatus.CREATED)																							// of Exception
+	public void save(User user) {
 		userRepository.save(user);
-		throw new IllegalStateException();
+//		throw new IllegalStateException();  // To demonstrate the roll back 
 	}
 
 	@Override
@@ -48,9 +51,14 @@ public class UserService implements IUserService {
 	@Transactional(rollbackFor = Exception.class)
 	public void update(User user, Integer id) {
 		Optional<User> userFromDB = userRepository.findById(id);
-		User user1 = userFromDB.get();
-		if (StringUtils.hasText(user.getFirstName()))
-			user1.setFirstName(user.getFirstName());
-		userRepository.save(user1);
+		if(userFromDB.isPresent()) {
+			if (StringUtils.hasText(user.getFirstName()))
+				userFromDB.get().setFirstName(user.getFirstName());
+			if (StringUtils.hasText(user.getEmail()))
+				userFromDB.get().setEmail(user.getEmail());
+		}else {
+			throw new UserNotFoundException("User does not exist to update");
+		}
+		userRepository.save(userFromDB.get());
 	}
 }

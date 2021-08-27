@@ -55,12 +55,7 @@ public class UserController {
 
 	@PostMapping
 	public void saveUser(@RequestBody @Valid User user) {
-		try {
-			userService.save(user);
-		} catch (Exception e) {
-			logger.error(e.getCause().toString());
-			e.printStackTrace();
-		}
+		userService.save(user);
 		logger.debug(user.getFirstName());
 
 	}
