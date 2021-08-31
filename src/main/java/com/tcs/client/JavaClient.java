@@ -20,10 +20,10 @@ public class JavaClient {
 		return new RestTemplate();
 	}
 	
-	public static void main(String[] args) {
-		ApplicationContext context = new SpringApplicationBuilder(JavaClient.class).web(WebApplicationType.NONE).run(args);
-		getUser(context);
-	}
+//	public static void main(String[] args) {
+//		ApplicationContext context = new SpringApplicationBuilder(JavaClient.class).web(WebApplicationType.NONE).run(args);
+//		getUser(context);
+//	}
 
 	private static void getUser(ApplicationContext context) {
 		RestTemplate restTemplate = context.getBean(RestTemplate.class);
